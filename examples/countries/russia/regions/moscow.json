@@ -1,0 +1,15 @@
+{
+"title": "Moscow region",
+"city": "Moscow",
+"cities": {
+	"moscow": {
+		"title" : "Moscow"
+	},
+	"abramcevo": {
+		"title" : "Abramcevo"
+	},
+	"alabino": {
+		"title" : "Alabino"
+	}
+}
+}

@@ -14,6 +14,8 @@ except ImportError:
 
 DIRECTORY = 'directory'
 FILE = 'file'
+_size = '_size'
+_ctime = '_ctime'
 _type = '_type'
 _ext = '_ext'
 _fn = '_fn'
@@ -24,23 +26,33 @@ _info = '_info'
 class FiledJson:
     
     def _scan(self, dir):
-        for dirpath, dirnames, filenames in os.walk(dir):    
-            dirpath = dirpath[len(dir):].lstrip('\\').split('\\');        
-            current = self.setCurrent(dirpath)
-        
-            for dirname in dirnames:            
-                #current[dirname] = {_type: DIRECTORY}
-                self._addDir(dirname)
-            for filename in filenames:
-                #current[filename] = {_type: FILE}
-                self._addFile(filename)
+        filename = dir + '.json'
+        if (os.path.isfile(filename) and os.path.exists(filename)):            
+            self._addFile(filename, True)
+            print(self.structure)
+        else:
+    
+            for dirpath, dirnames, filenames in os.walk(dir):    
+                dirpath = dirpath[len(dir):].lstrip('\\').split('\\');        
+                current = self.setCurrent(dirpath)
             
-    def _fullFileName(self, name):
-        return self.dir.lstrip('\\') + (os.sep if self.dir > '' else '') + name
+                for dirname in dirnames:                                
+                    self._addDir(dirname)
+                for filename in filenames:                    
+                    self._addFile(filename)
+                            
+            self.structure [self.name] = self.structure.pop('')           
+            
+    def _fullFileName(self, name):        
+        return os.path.join(self.base, self.dir.lstrip('\\'), name)
 
-    def _addFile(self, filename):
+    def _addFile(self, filename, fullName = False):
         
-        fn = self._fullFileName(filename)
+        if fullName:
+            fn = filename 
+            filename = os.path.split(filename)[1]
+        else:
+            fn = self._fullFileName(filename) 
         
         p = filename.rfind('.')
         if (p > -1):
@@ -57,6 +69,8 @@ class FiledJson:
             node = node.update(self.current[name])
 
         node.update({
+            _ctime: os.path.getctime(fn),
+            _size: os.path.getsize(fn),
             _type: FILE,
             _ext: ext,
             _fn: fn,
@@ -64,6 +78,7 @@ class FiledJson:
         })
         
         
+            
         self.current[name] = node
     
     def _addDir(self, dirname):
@@ -76,21 +91,22 @@ class FiledJson:
         if (name in self.current):
             node = node.update(self.current[name])
         
-                
+        #if (os.path.exists(fn)):
+        #    node[_ctime] = os.path.getctime(fn)
         
         
         node.update({
+            _ctime: os.path.getctime(fn),
             _type: DIRECTORY,            
             _fn: fn,
             'name': name    
         })
         
-        
+            
         self.current[name] = node
         
     def getJsonFile(self, fn):
         result = {}
-        fn = self.base + os.sep + fn
         
         if(os.path.isfile(fn)):            
             try:    
@@ -101,13 +117,13 @@ class FiledJson:
         return result
         
         
-    def __init__(self, dir):
-        self.base = dir
-        self.dir = ''
-        self.structure = {}
-        self.current = self.structure
+    def __init__(self, name):
+        self.base = name                    # base directory name
+        self.name = os.path.split(name)[1]  # name of root node
+        self.dir = ''                       # current directory related base directory
+        self.structure = {}                 # result structure
+        self.current = self.structure       # current structure node
         self._scan(self.base)
-
 
     
 
@@ -117,7 +133,7 @@ class FiledJson:
             
         
         self.current = self.structure        
-        p = []        
+        p = []                
         for name in path:
             p.append(name)
             if not name in self.current:
@@ -143,16 +159,13 @@ class FiledJson:
                 value = node[name]
                 if (not short or value):
                     if ( not (isinstance(value, dict) or isinstance(value, list))):                    
-                        result += "{}{}: {}\n".format(indent, name,value)
-                        #print('{}{}: {}'.format(indent, name,value))
+                        result += "{}{}: {}\n".format(indent, name,value)                        
                 
         for name in node:
             value = node[name]            
             if (isinstance(value, dict) or isinstance(value, list)):
                 
                 #print("\033[32m{}{}:\033[0m" .format(indent, name))
-                result +="{}{}:\n" .format(indent, name)
-                #print("{}{}:" .format(indent, name))
-                result += self.dump(value, short, indent + ". ")
-                #print(indent)
+                result +="{}{}:\n" .format(indent, name)                
+                result += self.dump(value, short, indent + ". ")                
         return result    
