@@ -54,10 +54,8 @@ class FiledJson:
         else:
             fn = self._fullFileName(filename) 
         
-        p = filename.rfind('.')
-        if (p > -1):
-            ext = filename[p + 1:]
-            name = filename[:p]
+        
+        (name, ext) = os.path.splitext(filename)
         
         if (name == _info):
             return
@@ -72,7 +70,7 @@ class FiledJson:
             _ctime: os.path.getctime(fn),
             _size: os.path.getsize(fn),
             _type: FILE,
-            _ext: ext,
+            _ext: ext[1:],
             _fn: fn,
             'name': name    
         })
