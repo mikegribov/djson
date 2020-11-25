@@ -1,10 +1,10 @@
-# Filed JSON
+# Distibuted JSON
 
 JSON distributed by file system
 
 JSON распределенный по файлам.
 Вы можете представить свои данные ни в одном, а в нескольких json файлах, в рамках одной директории с любым уровнем вложенности директорий. 
-Класс FiledJson объединит все файлы из директории в одну единую структуру, с сохранением файловой структуры. 
+Класс Djson объединит все файлы из директории в одну единую структуру, с сохранением файловой структуры. 
 
 Пример:
 
@@ -48,11 +48,11 @@ JSON распределенный по файлам.
 Python
 
 ``` phyton
-from filedjson import FiledJson
+from djson import Djson
 
-fj = FiledJson("examples/countries")
-print(fj)
-print(fj.structure)
+dj = Fdson("examples/countries")
+print(dj)
+print(dj.structure)
 ```
 
 Вывод:
