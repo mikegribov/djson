@@ -2,9 +2,11 @@
 
 JSON distributed by file system
 
+**[Documentation](https://mikegribov.github.io/djson/guide/)**
+
 JSON распределенный по файлам.
-Вы можете представить свои данные ни в одном, а в нескольких json файлах, в рамках одной директории с любым уровнем вложенности директорий. 
-Класс Djson объединит все файлы из директории в одну единую структуру, с сохранением файловой структуры. 
+Вы можете представить свои данные ни в одном, а в нескольких json файлах, в рамках одной директории с любым уровнем вложенности директорий.
+Класс Djson объединит все файлы из директории в одну единую структуру, с сохранением файловой структуры.
 
 Пример:
 
@@ -13,41 +15,48 @@ JSON распределенный по файлам.
 директория examples/countries включает 4 файла:
 
 - afghanistan.json
+
 ```json
 {
-	"name": "Afghanistan",
-    "city": "Kabul",
-	"continent": "Asia"
+  "name": "Afghanistan",
+  "city": "Kabul",
+  "continent": "Asia"
 }
 ```
+
 - albania.json
+
 ```json
 {
-	"title": "Albania",
-	"city": "Tirana",
-	"continent": "Europe"
+  "title": "Albania",
+  "city": "Tirana",
+  "continent": "Europe"
 }
 ```
+
 - algeria.json
+
 ```json
 {
-	"title": "Algeria",
-	"city": "Alger",
-	"continent": "Africa"	
+  "title": "Algeria",
+  "city": "Alger",
+  "continent": "Africa"
 }
 ```
+
 - andorra.json
+
 ```json
 {
-	"country": "Andorra",
-	"city": "Andorra la Vella",
-	"continent": "Europe"	
+  "country": "Andorra",
+  "city": "Andorra la Vella",
+  "continent": "Europe"
 }
 ```
 
 Python
 
-``` phyton
+```phyton
 from djson import Djson
 
 dj = Fdson("examples/countries")
@@ -83,6 +92,6 @@ print(dj.structure)
 
 Если ключу сформирован на основе файла или директории, то к соответствующему узлу добавляются дополнительные свойства:
 
-- _type: - ['file' , 'directory']
-- _ext: - расширение файла
-- _fn - имя файла
+- \_type: - ['file' , 'directory']
+- \_ext: - расширение файла
+- \_fn - имя файла
