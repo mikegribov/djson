@@ -6,6 +6,7 @@ Created on Wed Nov  4 00:22:32 2020
 """
 
 import os
+from typing import List, Union
 try:
     import simplejson as json
 except ImportError:
@@ -15,56 +16,54 @@ except ImportError:
 DIRECTORY = 'directory'
 FILE = 'file'
 _size = '_size'
-_ctime = '_ctime'
+_c_time = '_c_time'
 _type = '_type'
 _ext = '_ext'
 _fn = '_fn'
 _info = '_info'
 
 
-class Djson:
+class DJson:
 
-    def _scan(self, dir):
-        filename = dir + '.json'
-        if (os.path.isfile(filename) and os.path.exists(filename)):
-            self._addFile(filename, True)
+    def _scan(self, directory: str) -> None:
+        file_name = directory + '.json'
+        if os.path.isfile(file_name) and os.path.exists(file_name):
+            self._add_file(file_name, True)
             print(self.structure)
         else:
 
-            for dirpath, dirnames, filenames in os.walk(dir):
-                dirpath = dirpath[len(dir):].lstrip('\\').split('\\')
-                current = self.setCurrent(dirpath)
+            for dir_path, dir_names, file_names in os.walk(directory):
 
-                for dirname in dirnames:
-                    self._addDir(dirname)
-                for filename in filenames:
-                    self._addFile(filename)
+                for dir_name in dir_names:
+                    self._add_dir(dir_name)
+                for file_name in file_names:
+                    self._add_file(file_name)
 
             self.structure[self.name] = self.structure.pop('')
 
-    def _fullFileName(self, name):
+    def _full_file_name(self, name: str) -> str:
         return os.path.join(self.base, self.dir.lstrip('\\'), name)
 
-    def _addFile(self, filename, fullName=False):
+    def _add_file(self, file_name: str, full_name=False) -> None:
 
-        if fullName:
-            fn = filename
-            filename = os.path.split(filename)[1]
+        if full_name:
+            fn = file_name
+            file_name = os.path.split(file_name)[1]
         else:
-            fn = self._fullFileName(filename)
+            fn = self._full_file_name(file_name)
 
-        (name, ext) = os.path.splitext(filename)
+        (name, ext) = os.path.splitext(file_name)
 
-        if (name == _info):
+        if name == _info:
             return
 
-        node = self.getJsonFile(fn)
+        node = self.get_json_file(fn)
 
-        if (name in self.current):
+        if name in self.current:
             node = node.update(self.current[name])
 
         node.update({
-            _ctime: os.path.getctime(fn),
+            _c_time: os.path.getctime(fn),
             _size: os.path.getsize(fn),
             _type: FILE,
             _ext: ext[1:],
@@ -74,21 +73,18 @@ class Djson:
 
         self.current[name] = node
 
-    def _addDir(self, dirname):
+    def _add_dir(self, dir_name: str) -> None:
 
-        fn = self._fullFileName(dirname)
-        name = dirname
+        fn = self._full_file_name(dir_name)
+        name = dir_name
 
-        node = self.getJsonFile(fn + os.sep + _info + '.json')
+        node = self.get_json_file(fn + os.sep + _info + '.json')
 
-        if (name in self.current):
+        if name in self.current:
             node = node.update(self.current[name])
 
-        # if (os.path.exists(fn)):
-        #    node[_ctime] = os.path.getctime(fn)
-
         node.update({
-            _ctime: os.path.getctime(fn),
+            _c_time: os.path.getctime(fn),
             _type: DIRECTORY,
             _fn: fn,
             'name': name
@@ -96,10 +92,12 @@ class Djson:
 
         self.current[name] = node
 
-    def getJsonFile(self, fn):
+    @staticmethod
+    def get_json_file(fn: str) -> dict:
+
         result = {}
 
-        if(os.path.isfile(fn)):
+        if os.path.isfile(fn):
             try:
                 with open(fn, 'r', encoding='utf-8') as file:
                     result = json.load(file)
@@ -107,24 +105,24 @@ class Djson:
                 result = {'error': ex}
         return result
 
-    def __init__(self, name):
-        self.base = name                    # base directory name
-        self.name = os.path.split(name)[1]  # name of root node
+    def __init__(self, name: str) -> None:
+        self.base: str = name                    # base directory name
+        self.name: str = os.path.split(name)[1]  # name of root node
         self.dir = ''                       # current directory related base directory
         self.structure = {}                 # result structure
         self.current = self.structure       # current structure node
         self._scan(self.base)
 
-    def setCurrent(self, path):
-        if (len(path) and path[0] != ''):
+    def set_current(self, path: List[str]) -> dict:
+        if len(path) and path[0] != '':
             path.insert(0, '')
 
         self.current = self.structure
         p = []
         for name in path:
             p.append(name)
-            if not name in self.current:
-                self._addDir(name)
+            if not (name in self.current):
+                self._add_dir(name)
 
             self.dir = os.sep.join(p)
             self.current = self.current[name]
@@ -134,23 +132,21 @@ class Djson:
     def __str__(self):
         return self.dump()
 
-    def dump(self, node=False, short=True, indent=''):
+    def dump(self, node: Union[dict, list] = None, short=True, indent=''):
         result = ''
-        if (node == False):
+        if node is None:
             node = self.structure
 
         for name in node:
-            if (not short or name[:1] != '_' and name != 'name'):
+            if not short or name[:1] != '_' and name != 'name':
                 value = node[name]
-                if (not short or value):
-                    if (not (isinstance(value, dict) or isinstance(value, list))):
+                if not short or value:
+                    if not (isinstance(value, dict) or isinstance(value, list)):
                         result += "{}{}: {}\n".format(indent, name, value)
 
         for name in node:
             value = node[name]
-            if (isinstance(value, dict) or isinstance(value, list)):
-
-                #print("\033[32m{}{}:\033[0m" .format(indent, name))
+            if isinstance(value, dict) or isinstance(value, list):
                 result += "{}{}:\n" .format(indent, name)
                 result += self.dump(value, short, indent + ". ")
         return result

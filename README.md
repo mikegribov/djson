@@ -2,7 +2,7 @@
 
 JSON distributed by file system
 
-**[Documentation](https://mikegribov.github.io/djson/guide/)**
+**[Documentation](https://mikegribov.github.io/djson/)**
 
 JSON распределенный по файлам.
 Вы можете представить свои данные ни в одном, а в нескольких json файлах, в рамках одной директории с любым уровнем вложенности директорий.
