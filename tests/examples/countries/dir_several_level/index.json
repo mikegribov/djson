@@ -1,0 +1,12 @@
+{	
+		"afghanistan": {
+			"title": "Afghanistan",
+			"city": "Kabul",
+			"continent": "Asia"
+		},
+		"albania": {
+			"title": "Albania",
+			"city": "Tirana",
+			"continent": "Europe"
+		}
+}

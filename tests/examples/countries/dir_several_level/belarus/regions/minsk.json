@@ -1,0 +1,15 @@
+{
+	"title": "Minskiy region",
+	"city": "Minsk",
+	"cities": {
+		"minsk": {
+			"title": "Minsk"
+		},
+		"shack": {
+			"title": "Shack"
+		},
+		"uzda": {
+			"title": "Uzda"
+		}
+	}
+}
