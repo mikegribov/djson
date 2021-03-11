@@ -1,22 +1,22 @@
 {
-			"title": "Russia",
+	"title": "Russia",
+	"city": "Moscow",
+	"continent": "Europe",
+	"regions": {
+		"moscow": {
+			"title": "Moscow region",
 			"city": "Moscow",
-			"continent": "Europe",
-			"regions": {
+			"cities": {
 				"moscow": {
-					"title": "Moscow region",
-					"city": "Moscow",
-					"cities": {
-						"moscow": {
-							"title": "Moscow"
-						},
-						"abramcevo": {
-							"title": "Abramcevo"
-						},
-						"alabino": {
-							"title": "Alabino"
-						}
-					}
+					"title": "Moscow"
+				},
+				"abramcevo": {
+					"title": "Abramcevo"
+				},
+				"alabino": {
+					"title": "Alabino"
 				}
 			}
+		}
+	}
 }
