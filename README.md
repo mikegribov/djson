@@ -345,11 +345,11 @@ _info:
 к значению каждого ключа, который был получен из файла или директориюю добавляется дополнительная структура с ключом ___info__, которая содержит информацию о своем источнике - файле или директории, пример:
 ```json
 {
-	'c_time': 1615286846.780374, 
-	'fn': 'tests\\examples\\countries\\dir_several_level\\belarus\\regions\\minsk.json', 
-	'size': 190, 
-	'type': 'file', # или directory
-	'name': 'minsk', 
-	'ext': 'json'
+	"c_time": 1615286846.780374, /* время создания файла */
+	"fn": "tests\\examples\\countries\\dir_several_level\\belarus\\regions\\minsk.json", 
+	"size": 190,  /* размер файла в байтах */
+	"type": "file", /* или directory */
+	"name": "minsk", 
+	"ext": "json"
 }
 ```

@@ -12,8 +12,11 @@ try:
 except ImportError:
     import json
 
-DIRECTORY, FILE, _index, _size, _c_time, _type, _ext, _fn, _info = \
-'directory', 'file', 'index', 'size', 'c_time', 'type', 'ext', 'fn', '_info'
+from .plugins.base_file import BaseFilePlugin
+from .plugins.json import PluginJson
+from .exceptions.file_exceptions import FileNotFoundException
+
+_index = 'index'
 
 class DJson:
     def _scan(self, name: str) -> None:
@@ -26,24 +29,18 @@ class DJson:
         self.structure = self._add_file(file_name)
 
     def _add_file(self, file_name: str) -> None:
-        info = {
-            _c_time: os.path.getctime(file_name),
-            _fn: file_name,
-        }
+
 
         if os.path.isfile(file_name):
-            (name, ext) = os.path.splitext(file_name)
-            file_size = os.path.getsize(file_name)
-            node = self.get_json_file(file_name) if file_size else {}
-            info.update({
-                _size: file_size,
-                _type: FILE,
-                'name': name.split(os.sep)[-1],
-                _ext: ext[1:]
-            })
+            node = self._apply_plugins(file_name)
         else:
             index_fn = os.path.join(file_name, _index + '.json')
-            node = self.get_json_file(index_fn) if os.path.exists(index_fn) else {}
+            try:
+                node = self._apply_plugins(index_fn)
+            except FileNotFoundException:
+                node = {}
+                
+            info = node.get('_info', {})
             files = os.listdir(file_name)
             for fn in files:
                 if fn == _index + '.json':
@@ -52,30 +49,15 @@ class DJson:
                 if name not in node:
                     node[name] = {}
                 node[name].update(self._add_file(os.path.join(file_name, fn)))
-            info.update({
-                _type: DIRECTORY,
-                'name': file_name.split(os.sep)[-1]
-            })
-        node.update({
-            _info: info
-        })
+
+            info.update(BaseFilePlugin.get_file_info(file_name))
 
         return node
 
-    def _add_dir(self, dir_name: str) -> None:
-        index_fn = os.path.join(dir_name, _index + '.json')
-        node = self.get_json_file(index_fn) if os.path.exists(index_fn) else {}
-        files = os.listdir(dir_name)
-        node.update({
-            _info: {
-                _c_time: os.path.getctime(dir_name),
-                _type: DIRECTORY,
-                _fn: dir_name,
-                'name': dir_name.split(os.sep)[-1]
-            }
-        })
-
-        return node
+    def _apply_plugins(self, file_name: str) -> dict:
+        '''Apply plugins to the file file_name '''
+        plugin = PluginJson(file_name)
+        return  plugin.get()
 
     @staticmethod
     def get_json_file(fn: str) -> dict:
