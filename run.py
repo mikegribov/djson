@@ -18,7 +18,7 @@ dj = DJson(os.path.join("tests", "examples", "single_file_array.json"))
 
 #dj = DJson(os.path.join("tests", "examples", "empty_dir"))
 #dj = DJson(os.path.join("tests", "examples", "countries", "dir_one_level"))
-# dj = DJson(os.path.join("tests", "examples", "countries", "dir_several_level"))
+#dj = DJson(os.path.join("tests", "examples", "countries", "dir_several_level"))
 
 print(dj.dump())
 

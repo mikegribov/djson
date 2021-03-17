@@ -14,16 +14,31 @@ except ImportError:
 
 
 from .plugins.base_file import BaseFilePlugin, _info
-from .plugins.json import PluginJson
+from .plugins.json import *
 from .exceptions.file_exceptions import FileNotFoundException
+from .classes.dict_readonly import DictReadonly
 
 _index = 'index'
-
+_default_plugins = {'PluginJson'}
 class DJson:
-    def __init__(self, name: str, options: tuple = None) -> None:
-        self._options = () if options is None else options
+    def __init__(self, name: str, **options) -> None:
+        self._options = DictReadonly(options)
         self.structure = {}                 # result structure
+        self._load_plugins()
         self._scan(name)
+
+    def _load_plugins(self):
+        self.plugins = {}
+        list = _default_plugins
+        try:
+            list.update(set(self.options["plugins"]))
+        except KeyError:
+            pass
+
+        for name in list:
+            cl = globals().get(name, None)
+            if cl is not None:
+                self.plugins[name] = cl
 
     def _scan(self, name: str) -> None:
         ''' Scan the directory or file to form common structure'''
@@ -35,8 +50,6 @@ class DJson:
         self.structure = self._add_file(file_name)
 
     def _add_file(self, file_name: str) -> None:
-
-
         if os.path.isfile(file_name):
             node = self._apply_plugins(file_name)
         else:
@@ -63,16 +76,17 @@ class DJson:
 
     def _apply_plugins(self, file_name: str) -> dict:
         '''Apply plugins to the file file_name '''
-        plugin = PluginJson(file_name)
-        return  plugin.get()
+        for name in  self.plugins:
+            Plugin = self.plugins[name]
+            return  Plugin(file_name).get()
 
 
     def __str__(self):
         return self.dump()
 
     @property
-    def options(self) -> tuple:
-        return self.options
+    def options(self) -> DictReadonly:
+        return self._options
 
     def dump(self, node: Union[dict, list] = None, short=True, indent=''):
         result = ''
