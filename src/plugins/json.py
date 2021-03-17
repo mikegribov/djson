@@ -13,7 +13,11 @@ class PluginJson(BaseFilePlugin):
 
     def load(self, content) -> Union[dict, list]:
         try:
-            result = json.load(content)
+            text = content.read()
+            if text.strip() == '':
+                result = {}
+            else:
+                result = json.loads(text)
         except json.JSONDecodeError as ex:
             result = {'error': '{} file: {}'.format(ex, self.full_name)}
         return result

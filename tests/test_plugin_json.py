@@ -1,6 +1,7 @@
 from djson.src.plugins.json import PluginJson
 import os
 import pytest
+from djson.src.exceptions.file_exceptions import FileNotFoundException, IsNotFileException
 
 def test_extensions():
     extensions = {'ext1', 'ext2', 'ext3'}
@@ -16,19 +17,22 @@ def test_check():
 
 def check(name, result):
     plugin = PluginJson(os.path.join("examples", "single_file_" + name + ".json"))
-    assert plugin.get() == result
+    res = plugin.get()
+    if '_info' in res:
+        del res['_info']
+    assert res == result
 
 def test_not_exists():
     hasException = False
-    check("not_eixsts1", {})
-    '''
+    #check("not_eixsts1", {})
+
     try:
         check("not_eixsts", {})
-    except FileNotFoundError:
+    except FileNotFoundException:
         hasException = True
     
     assert hasException == True
-    '''
+
 
 
 def test_object():

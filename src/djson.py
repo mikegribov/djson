@@ -12,13 +12,19 @@ try:
 except ImportError:
     import json
 
-from .plugins.base_file import BaseFilePlugin
+
+from .plugins.base_file import BaseFilePlugin, _info
 from .plugins.json import PluginJson
 from .exceptions.file_exceptions import FileNotFoundException
 
 _index = 'index'
 
 class DJson:
+    def __init__(self, name: str, options: tuple = None) -> None:
+        self._options = () if options is None else options
+        self.structure = {}                 # result structure
+        self._scan(name)
+
     def _scan(self, name: str) -> None:
         ''' Scan the directory or file to form common structure'''
         file_name = name
@@ -39,8 +45,8 @@ class DJson:
                 node = self._apply_plugins(index_fn)
             except FileNotFoundException:
                 node = {}
-                
-            info = node.get('_info', {})
+
+            info = node.get(_info, {})
             files = os.listdir(file_name)
             for fn in files:
                 if fn == _index + '.json':
@@ -51,6 +57,7 @@ class DJson:
                 node[name].update(self._add_file(os.path.join(file_name, fn)))
 
             info.update(BaseFilePlugin.get_file_info(file_name))
+            node[_info] = info
 
         return node
 
@@ -59,27 +66,13 @@ class DJson:
         plugin = PluginJson(file_name)
         return  plugin.get()
 
-    @staticmethod
-    def get_json_file(fn: str) -> dict:
-
-        result = {}
-
-        if os.path.isfile(fn):
-            try:
-                with open(fn, 'r', encoding='utf-8') as file:
-                    result = json.load(file)
-            except json.JSONDecodeError as ex:
-                result = {'error': '{} file: {}'.format(ex, fn)}
-        return result
-
-    def __init__(self, name: str) -> None:
-        self.base: str = name                    # base directory name
-        self.structure = {}                 # result structure
-        self._scan(self.base)
-
 
     def __str__(self):
         return self.dump()
+
+    @property
+    def options(self) -> tuple:
+        return self.options
 
     def dump(self, node: Union[dict, list] = None, short=True, indent=''):
         result = ''
@@ -89,7 +82,7 @@ class DJson:
         for name in node:
             if not short or name[:1] != '_' and name != 'name':
                 value = node[name]
-                if not short or value:
+                if not short or value is not None:
                     if not (isinstance(value, dict) or isinstance(value, list)):
                         result += "{}{}: {}\n".format(indent, name, value)
 
