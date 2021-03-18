@@ -6,7 +6,9 @@ Created on Wed Nov  4 00:22:32 2020
 """
 
 import os
+import copy
 from typing import List, Union
+
 try:
     import simplejson as json
 except ImportError:
@@ -21,11 +23,12 @@ from .classes.dict_readonly import DictReadonly
 _index = 'index'
 _default_plugins = {'PluginJson'}
 class DJson:
-    def __init__(self, name: str, **options) -> None:
+    def __init__(self, name: str = '', **options) -> None:
         self._options = DictReadonly(options)
         self.structure = {}                 # result structure
         self._load_plugins()
-        self._scan(name)
+        if name > '':
+            self._scan(name)
 
     def _load_plugins(self):
         self.plugins = {}
@@ -39,6 +42,7 @@ class DJson:
             cl = globals().get(name, None)
             if cl is not None:
                 self.plugins[name] = cl
+
 
     def _scan(self, name: str) -> None:
         ''' Scan the directory or file to form common structure'''
@@ -84,39 +88,84 @@ class DJson:
     def __str__(self):
         return self.dump()
 
+    def clear(self):
+        self.structure = {}
+
+    def refresh(self, name = '') -> None:
+        self.clear()
+        self._scan(name)
+
     @property
     def options(self) -> DictReadonly:
         return self._options
 
-    def dump(self, node: Union[dict, list] = None, short=True, indent=''):
+    def _dump_val(self, node, key='', short=True, indent='', exclude_info=True):
+        return "{}{}{}\n".format(indent, key + (": " if key else ""), node)
+
+    def _dump_arr(self, node: list, key='', short=True, indent='', exclude_info=True):
         result = ''
-        if node is None:
-            node = self.structure
+        n = 0
+        for value in node:
+            value = self.dump(value, key="#" + str(n), short=short, indent=indent + ". ", exclude_info=exclude_info)
+            result += value
+            n += 1
 
-        for name in node:
-            if not short or name[:1] != '_' and name != 'name':
-                value = node[name]
-                if not short or value is not None:
-                    if not (isinstance(value, dict) or isinstance(value, list)):
-                        result += "{}{}: {}\n".format(indent, name, value)
-
-        for name in node:
-            value = node[name]
-            if isinstance(value, dict) or isinstance(value, list):
-                result += "{}{}:\n" .format(indent, name)
-                result += self.dump(value, short, indent + ". ")
+        result = '{0}{1}{2}'.format(indent, (key + ": \n" if key else ""), result)
         return result
 
-    def _copy_node(self, node: Union[dict, list] = None, exclude_info = False):
-        result = {}
+    def _dump_obj(self, node: dict, key='', short=True, indent='', exclude_info=True):
+        result = ''
+
         for name in node:
             if exclude_info and name == _info:
                 continue
             value = node[name]
-            if isinstance(value, dict) or isinstance(value, list):
-                value = self._copy_node(value, exclude_info)
-            result[name] = value
+            value = self.dump(value, key=name, short=short, indent=indent + ". ", exclude_info=exclude_info)
+            result += value
+        result = '{}{}{}'.format(indent, (key + ": \n" if key else ""), result)
         return result
 
-    def copy(self, exclude_info = False):
+    def dump(self, node=None, key='', short=True, indent='', exclude_info = True):
+        result = ''
+        if node is None:
+            node = self.structure
+
+        if isinstance(node, list):
+            result = self._dump_arr(node, key=key, short=short, indent=indent)
+        elif isinstance(node, dict):
+            result = self._dump_obj(node, key=key, short=short, indent=indent)
+        else:
+            result = self._dump_val(node, key=key, short=short, indent=indent)
+
+        return result
+
+    def _copy_node(self, node: Union[dict, list] = None, exclude_info = False):
+
+        if isinstance(node, dict): # for DICT
+            result = {}
+            for name in node:
+                if exclude_info and name == _info:
+                    continue
+                value = node[name]
+                if isinstance(value, dict) or isinstance(value, list):
+                    value = self._copy_node(value, exclude_info)
+                result[name] = value
+        else: # for LIST
+            result = []
+            for value in node:
+                if isinstance(value, dict) or isinstance(value, list):
+                    value = self._copy_node(value, exclude_info)
+                result.append(value)
+        return result
+
+
+    def copy_from(self, src):
+        self.structure = src._copy_node(src.structure, False)
+        return self
+
+    def from_dict(self, data: dict):
+        self.structure = copy.deepcopy(data)
+        return self
+
+    def to_dict(self, exclude_info = True):
         return self._copy_node(self.structure, exclude_info)

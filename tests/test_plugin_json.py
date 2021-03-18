@@ -42,7 +42,7 @@ def test_array():
     check("array", ['element1', 'element2', 'element3'])
 
 def test_arrayobj():
-    check("arrobj", [{'name': 'object1'}, {'name': 'object1'}, {'name': 'object3'}])
+    check("arrobj", [{"name": "object1", "title": "Object one"}, {"name": "object1", "title": "Object two"},	{"name": "object3", "title": "Object three"}])
 
 def test_objarr():
     check("objarr", {'name1': 'value1', 'name2': 'value2', 'name3': 'value3', 'arr': ['element1', 'element2', 'element3']})

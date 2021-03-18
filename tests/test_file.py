@@ -38,4 +38,4 @@ def test_single_file_array():
 
 def test_single_file_arrobj():
     result = get_result("single_file_arrobj")
-    assert result == [{"name": "object1"}, {"name": "object1"},	{"name": "object3"}]
+    assert result == [{"name": "object1", "title": "Object one"}, {"name": "object1", "title": "Object two"},	{"name": "object3", "title": "Object three"}]
