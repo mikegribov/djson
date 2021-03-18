@@ -26,9 +26,15 @@ class DJson:
     def __init__(self, name: str = '', **options) -> None:
         self._options = DictReadonly(options)
         self.structure = {}                 # result structure
+        self._aliases = {}
         self._load_plugins()
         if name > '':
             self._scan(name)
+            self._add_aliases(self.structure['_aliases'])
+
+    def _add_aliases(self, aliases: dict, path = ''):
+        for name in aliases:
+            self._aliases[name] = path + ('.' if path > '' else '') + aliases[name]
 
     def _load_plugins(self):
         self.plugins = {}
@@ -90,10 +96,34 @@ class DJson:
 
     def clear(self):
         self.structure = {}
+        self._aliases = {}
 
     def refresh(self, name = '') -> None:
         self.clear()
         self._scan(name)
+
+    def _get_value(self, path: list, node: Union[dict, list]):
+        if not len(path):
+            return node
+        name = path[0]
+        if isinstance(node, dict):
+            if name in node:
+                return self._get_value(path[1:], node[name])
+        elif isinstance(node, list):
+            i = int(name)
+            if 0 <= i < len(node):
+                return self._get_value(path[1:], node[i])
+        return None
+
+    def get_value(self, path: str):
+        return self._get_value(path.split('.'), self.structure)
+
+
+    def alias(self, name: str):
+        if name in self._aliases:
+            path = self._aliases[name]
+            return self.get_value(path)
+
 
     @property
     def options(self) -> DictReadonly:
@@ -160,6 +190,8 @@ class DJson:
 
 
     def copy_from(self, src):
+        self._options = src.options
+        self._load_plugins()
         self.structure = src._copy_node(src.structure, False)
         return self
 

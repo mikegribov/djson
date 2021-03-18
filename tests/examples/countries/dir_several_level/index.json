@@ -1,12 +1,16 @@
 {	
-		"afghanistan": {
-			"title": "Afghanistan",
-			"city": "Kabul",
-			"continent": "Asia"
-		},
-		"albania": {
-			"title": "Albania",
-			"city": "Tirana",
-			"continent": "Europe"
-		}
+	"_aliases":{
+		"russia_population": "russia.population",
+		"bel_population": "belarus.population"
+	},
+	"afghanistan": {
+		"title": "Afghanistan",
+		"city": "Kabul",
+		"continent": "Asia"
+	},
+	"albania": {
+		"title": "Albania",
+		"city": "Tirana",
+		"continent": "Europe"
+	}		
 }
