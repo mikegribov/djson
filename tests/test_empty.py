@@ -1,11 +1,11 @@
-from djson.src.djson import DJson
+from xjson.src.xjson import XJson
 import os
 
 
 def check_empty(name, info = {}):
-    dj = DJson(os.path.join("examples", name))
-    result = dj.structure.pop('_info', {})
-    assert dj.structure == {}
+    xj = XJson(os.path.join("examples", name))
+    result = xj.structure.pop('_info', {})
+    assert xj.structure == {}
 
     for name in info:
         assert info[name] == result[name]

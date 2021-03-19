@@ -22,8 +22,9 @@ from .classes.dict_readonly import DictReadonly
 from .options import Options
 
 _index = 'index'
+_aliases = '_aliases'
 _required_plugins = {'PluginJson'}
-class DJson:
+class XJson:
     def __init__(self, name: str = '', **options) -> None:
         self._options = Options(options)
         self.structure = {}                 # result structure
@@ -31,7 +32,8 @@ class DJson:
         self._load_plugins()
         if name > '':
             self._scan(name)
-            self._add_aliases(self.structure['_aliases'])
+            if _aliases in self.structure:
+                self._add_aliases(self.structure[_aliases])
 
     def _add_aliases(self, aliases: dict, path = ''):
         for name in aliases:

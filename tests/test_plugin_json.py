@@ -1,7 +1,7 @@
-from djson.src.plugins.json import PluginJson
+from xjson.src.plugins.json import PluginJson
 import os
 import pytest
-from djson.src.exceptions.file_exceptions import FileNotFoundException, IsNotFileException
+from xjson.src.exceptions.file_exceptions import FileNotFoundException, IsNotFileException
 
 def test_extensions():
     extensions = {'ext1', 'ext2', 'ext3'}

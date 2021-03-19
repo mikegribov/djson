@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from src.djson import DJson
+from src.xjson import XJson
 import os
 import sys
 
@@ -20,7 +20,7 @@ from src.plugins.json import PluginJson
 
 #dj = DJson(os.path.join("tests", "examples", "empty_dir"))
 #dj = DJson(os.path.join("tests", "examples", "countries", "dir_one_level"))
-dj = DJson(os.path.join("tests", "examples", "countries", "dir_several_level"))
+dj = XJson(os.path.join("tests", "examples", "countries", "dir_several_level"))
 
 print(dj)
 #print(dj.get_value('russia.population'))

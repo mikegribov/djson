@@ -1,10 +1,10 @@
-from djson.src.djson import DJson
+from xjson.src.xjson import XJson
 import os
 
 
 def check(name, value):
-    dj = DJson(os.path.join("examples", name))
-    assert dj.dump() == value
+    xj = XJson(os.path.join("examples", name))
+    assert xj.dump() == value
 
 def test_empty_file():
     check("empty_file", '')

@@ -1,4 +1,8 @@
 {	
+	"_aliases":{
+		"russia_population": "russia.population",
+		"bel_population": "belarus.population"
+	},
 		"afghanistan": {
 			"title": "Afghanistan",
 			"city": "Kabul",
@@ -23,6 +27,7 @@
 			"title": "Belarus",
 			"city": "Minsk",
 			"continent": "Europe",
+			"population": "9.4 млн.",
 			"regions":{
 				"minsk": {
 					"title": "Minskiy region",
@@ -45,6 +50,7 @@
 			"title": "Russia",
 			"city": "Moscow",
 			"continent": "Europe",
+			"population": "147 млн.",
 			"regions": {
 				"moscow": {
 					"title": "Moscow region",

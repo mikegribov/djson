@@ -2,6 +2,7 @@
    "title":"Russia",
    "city":"Moscow",
    "continent":"Europe",
+   "population": "147 млн.",
    "regions":{
       "moscow":{
          "title":"Moscow region",
