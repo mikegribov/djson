@@ -7,7 +7,7 @@ Created on Wed Nov  4 00:22:32 2020
 
 import os
 import copy
-from typing import List, Union
+from typing import List, Union, Any
 
 try:
     import simplejson as json
@@ -20,6 +20,7 @@ from .plugins.json import *
 from .exceptions.file_exceptions import FileNotFoundException
 from .classes.dict_readonly import DictReadonly
 from .options import Options
+from .xdict import XDict
 
 _index = 'index'
 _aliases = '_aliases'
@@ -27,7 +28,7 @@ _required_plugins = {'PluginJson'}
 class XJson:
     def __init__(self, name: str = '', **options) -> None:
         self._options = Options(options)
-        self.structure = {}                 # result structure
+        self.structure = XDict()                 # result structure
         self._aliases = {}
         self._load_plugins()
         if name > '':
@@ -60,7 +61,31 @@ class XJson:
             file_name = file_name + '.json'
             if not os.path.exists(file_name):
                 return
-        self.structure = self._add_file(file_name)
+        self.structure = self.create_structure(self._add_file(file_name))
+
+
+    def _create_structure_by_list(self, data: list) -> list:
+        result = []
+        for value in data:
+            result.append(self.create_structure(value))
+        return result
+
+    def _create_structure_by_dict(self, data: dict) -> XDict:
+        result = XDict()
+        for name in data:
+            value = data[name]
+            result[name] = self.create_structure(value)
+        return result
+
+    def create_structure(self, data: Any) -> Union[list, XDict]:
+        if isinstance(data, dict):
+            result = self._create_structure_by_dict(data)
+        elif isinstance(data, list):
+            result = self._create_structure_by_list(data)
+        else:
+            result = data
+        return result
+
 
     def _add_file(self, file_name: str) -> None:
         if os.path.isfile(file_name):
@@ -105,11 +130,11 @@ class XJson:
         self.clear()
         self._scan(name)
 
-    def _get_value(self, path: list, node: Union[dict, list]):
+    def _get_value(self, path: list, node: Union[XDict, list]):
         if not len(path):
             return node
         name = path[0]
-        if isinstance(node, dict):
+        if isinstance(node, XDict):
             if name in node:
                 return self._get_value(path[1:], node[name])
         elif isinstance(node, list):

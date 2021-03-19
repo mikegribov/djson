@@ -22,7 +22,7 @@ from src.plugins.json import PluginJson
 #dj = DJson(os.path.join("tests", "examples", "countries", "dir_one_level"))
 dj = XJson(os.path.join("tests", "examples", "countries", "dir_several_level"))
 
-print(dj)
+print(dj.structure)
 #print(dj.get_value('russia.population'))
 print(dj.alias('russia_population'))
 
