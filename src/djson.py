@@ -19,12 +19,13 @@ from .plugins.base_file import BaseFilePlugin, _info
 from .plugins.json import *
 from .exceptions.file_exceptions import FileNotFoundException
 from .classes.dict_readonly import DictReadonly
+from .options import Options
 
 _index = 'index'
-_default_plugins = {'PluginJson'}
+_required_plugins = {'PluginJson'}
 class DJson:
     def __init__(self, name: str = '', **options) -> None:
-        self._options = DictReadonly(options)
+        self._options = Options(options)
         self.structure = {}                 # result structure
         self._aliases = {}
         self._load_plugins()
@@ -38,9 +39,9 @@ class DJson:
 
     def _load_plugins(self):
         self.plugins = {}
-        list = _default_plugins
+        list = _required_plugins
         try:
-            list.update(set(self.options["plugins"]))
+            list.update(set(self.options.plugins))
         except KeyError:
             pass
 
@@ -126,7 +127,7 @@ class DJson:
 
 
     @property
-    def options(self) -> DictReadonly:
+    def options(self) -> Options:
         return self._options
 
     def _dump_val(self, node, key='', short=True, indent='', exclude_info=True):

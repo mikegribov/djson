@@ -26,7 +26,6 @@ print(dj)
 #print(dj.get_value('russia.population'))
 print(dj.alias('russia_population'))
 
-
 #print(DJson().copy_from(dj))
 #print(dj.copy(exclude_info = True))
 #print(dj.structure)
