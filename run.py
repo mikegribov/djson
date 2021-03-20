@@ -22,10 +22,13 @@ from src.plugins.plugin_json import PluginJson
 #dj = DJson(os.path.join("tests", "examples", "countries", "dir_one_level"))
 #dj = XJson(os.path.join("tests", "examples", "countries", "dir_several_level"))
 xj = XJson(os.path.join("tests", "examples", "countries", "single_file.xjson"))
-
 print(xj.structure)
+
+print(xj.structure.alias('russia_population'))
+print(xj.structure['russia_population'])
+
 #print(dj.get_value('russia.population'))
-print(xj.alias('russia_population'))
+#print(xj.alias('russia_population'))
 
 #print(DJson().copy_from(dj))
 #print(dj.copy(exclude_info = True))

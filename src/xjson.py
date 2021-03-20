@@ -23,25 +23,17 @@ from .classes.dict_readonly import DictReadonly
 from .options import Options
 from .xdict import XDict
 
-_index = 'index'
-_aliases = '_aliases'
-_required_plugins = {'PluginJson', 'PluginXJson'}
-default_exts = ['json', 'xjson']
+_index, _aliases, _required_plugins, default_exts \
+    = 'index', '_aliases', {'PluginJson', 'PluginXJson'}, ['json', 'xjson']
+
 class XJson:
     def __init__(self, name: str = '', **options) -> None:
         self._options = Options(options)
-        self._aliases = {}
-        self.structure = XDict()                 # result structure
+        self.structure = XDict(owner=self)                 # result structure
         self._load_plugins()
         if name > '':
             self._scan(name)
-            if _aliases in self.structure:
-                self._add_aliases(self.structure[_aliases])
 
-    def _add_aliases(self, aliases: dict, path = ''):
-        for name in aliases:
-            #self._aliases[name] = path + ('.' if path > '' else '') + aliases[name]
-            pass
 
     def _load_plugins(self):
         self.plugins = {}
@@ -75,7 +67,7 @@ class XJson:
         return result
 
     def _create_structure_by_dict(self, data: dict) -> XDict:
-        result = XDict()
+        result = XDict(owner=self)
         for name in data:
             value = data[name]
             result[name] = self.create_structure(value)
@@ -125,39 +117,19 @@ class XJson:
                 return  plugin.get()
 
 
-    def __str__(self):
-        return self.dump()
+    #def __str__(self):
+        #return self.dump()
+
 
     def clear(self):
         self.structure = {}
-        self._aliases = {}
 
     def refresh(self, name = '') -> None:
         self.clear()
         self._scan(name)
 
-    def _get_value(self, path: list, node: Union[XDict, list]):
-        if not len(path):
-            return node
-        name = path[0]
-        if isinstance(node, XDict):
-            if name in node:
-                return self._get_value(path[1:], node[name])
-        elif isinstance(node, list):
-            i = int(name)
-            if 0 <= i < len(node):
-                return self._get_value(path[1:], node[i])
-        return None
-
-    def get_value(self, path: str):
-        return self._get_value(path.split('.'), self.structure)
-
-
     def alias(self, name: str):
-        if name in self._aliases:
-            path = self._aliases[name]
-            return self.get_value(path)
-
+        self.structure.alias(name)
 
     @property
     def options(self) -> Options:
