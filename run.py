@@ -4,7 +4,7 @@ from src.xjson import XJson
 import os
 import sys
 
-from src.plugins.json import PluginJson
+from src.plugins.plugin_json import PluginJson
 
 #plugin = PluginJson("D:\\WORK\\GITHUB\\djson\\tests\examples\\single_file_objarr.json")
 #print(plugin.get())
@@ -20,11 +20,12 @@ from src.plugins.json import PluginJson
 
 #dj = DJson(os.path.join("tests", "examples", "empty_dir"))
 #dj = DJson(os.path.join("tests", "examples", "countries", "dir_one_level"))
-dj = XJson(os.path.join("tests", "examples", "countries", "dir_several_level"))
+#dj = XJson(os.path.join("tests", "examples", "countries", "dir_several_level"))
+xj = XJson(os.path.join("tests", "examples", "countries", "single_file.xjson"))
 
-print(dj.structure)
+print(xj.structure)
 #print(dj.get_value('russia.population'))
-print(dj.alias('russia_population'))
+print(xj.alias('russia_population'))
 
 #print(DJson().copy_from(dj))
 #print(dj.copy(exclude_info = True))

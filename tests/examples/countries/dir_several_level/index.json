@@ -1,7 +1,13 @@
 {	
 	"_aliases":{
-		"russia_population": "russia.population",
-		"bel_population": "belarus.population"
+		"russia_population": {
+			"type": "link", 
+			"ref": "russia.population"
+		}, 
+		"bel_population": {
+			"type": "link", 
+			"ref": "belarus.population"
+		},
 	},
 	"afghanistan": {
 		"title": "Afghanistan",

@@ -16,7 +16,8 @@ except ImportError:
 
 
 from .plugins.base_file import BaseFilePlugin, _info
-from .plugins.json import *
+from .plugins.plugin_json import PluginJson
+from .plugins.plugin_xjson import PluginXJson
 from .exceptions.file_exceptions import FileNotFoundException
 from .classes.dict_readonly import DictReadonly
 from .options import Options
@@ -24,12 +25,13 @@ from .xdict import XDict
 
 _index = 'index'
 _aliases = '_aliases'
-_required_plugins = {'PluginJson'}
+_required_plugins = {'PluginJson', 'PluginXJson'}
+default_exts = ['json', 'xjson']
 class XJson:
     def __init__(self, name: str = '', **options) -> None:
         self._options = Options(options)
-        self.structure = XDict()                 # result structure
         self._aliases = {}
+        self.structure = XDict()                 # result structure
         self._load_plugins()
         if name > '':
             self._scan(name)
@@ -38,7 +40,8 @@ class XJson:
 
     def _add_aliases(self, aliases: dict, path = ''):
         for name in aliases:
-            self._aliases[name] = path + ('.' if path > '' else '') + aliases[name]
+            #self._aliases[name] = path + ('.' if path > '' else '') + aliases[name]
+            pass
 
     def _load_plugins(self):
         self.plugins = {}
@@ -57,11 +60,12 @@ class XJson:
     def _scan(self, name: str) -> None:
         ''' Scan the directory or file to form common structure'''
         file_name = name
-        if not os.path.exists(file_name):
-            file_name = file_name + '.json'
-            if not os.path.exists(file_name):
-                return
-        self.structure = self.create_structure(self._add_file(file_name))
+        exts = [''] + ['.' + val for val in default_exts]
+
+        for ext in exts:
+            if os.path.exists(file_name + ext):
+                self.structure = self.create_structure(self._add_file(file_name + ext))
+                break
 
 
     def _create_structure_by_list(self, data: list) -> list:
@@ -116,7 +120,9 @@ class XJson:
         '''Apply plugins to the file file_name '''
         for name in  self.plugins:
             Plugin = self.plugins[name]
-            return  Plugin(file_name).get()
+            plugin = Plugin(file_name)
+            if plugin.check():
+                return  plugin.get()
 
 
     def __str__(self):

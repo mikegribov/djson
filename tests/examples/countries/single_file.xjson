@@ -1,0 +1,72 @@
+{	
+	_aliases:{
+		russia_population: @russia.population,
+		bel_population: @belarus.population
+	},
+		afghanistan: {
+			title: "Afghanistan",
+			city: "Kabul",
+			continent: "Asia"
+		},
+		albania: {
+			title: "Albania",
+			city: "Tirana",
+			continent: "Europe"
+		},
+		algeria: {
+			title: "Algeria",
+			city: "Alger",
+			continent: "Africa"
+		},
+		andorra: {
+			title: "Andorra",
+			city: "Andorra la Vella",
+			continent: "Europe"
+		},
+		belarus: {
+			title: "Belarus",
+			city: "Minsk",
+			continent: "Europe",
+			population: "9.4 млн.",
+			regions:{
+				"minsk": {
+					title: "Minskiy region",
+					city: "Minsk",
+					cities: {
+						"minsk": {
+							title: "Minsk"
+						},
+						"shack": {
+							title: "Shack"
+						},
+						"uzda": {
+							title: "Uzda"
+						}
+					}
+				}
+			}
+		},
+		russia: {
+			title: "Russia",
+			city: "Moscow",
+			continent: "Europe",
+			population: "147 млн.",
+			regions: {
+				"moscow": {
+					title: "Moscow region",
+					city: "Moscow",
+					cities: {
+						"moscow": {
+							title: "Moscow"
+						},
+						"abramcevo": {
+							title: "Abramcevo"
+						},
+						"alabino": {
+							title: "Alabino"
+						}
+					}
+				}
+			}
+		}
+}

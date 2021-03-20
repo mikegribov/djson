@@ -2,9 +2,9 @@ try:
     import simplejson as json
 except ImportError:
     import json
-import os
-from .base_file import BaseFilePlugin
 from typing import Union
+from .base_file import BaseFilePlugin
+
 
 class PluginJson(BaseFilePlugin):
 
