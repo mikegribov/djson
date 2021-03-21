@@ -31,9 +31,6 @@ def test_single_file_objarr():
     assert info['ext'] == 'json'
     assert info['name'] == 'single_file_objarr'
     '''
-def test_single_file_array():
-    result = get_result("single_file_array")
-    assert list(result) == ["element1", "element2", "element3"]
 
 def test_single_file_array():
     result = get_result("single_file_array")

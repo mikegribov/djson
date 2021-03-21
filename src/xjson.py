@@ -7,7 +7,7 @@ Created on Wed Nov  4 00:22:32 2020
 
 import os
 import copy
-from typing import List, Union, Any
+from typing import Union, Any
 
 try:
     import simplejson as json
@@ -20,7 +20,7 @@ from .plugins.plugin_json import PluginJson
 from .plugins.plugin_xjson import PluginXJson
 from .exceptions.file_exceptions import FileNotFoundException
 from .options import Options
-from .xnodes import XDict, XList
+from .xnodes import XNode, XDict, XList
 
 _index, _aliases, _required_plugins, default_exts \
     = 'index', '_aliases', {'PluginJson', 'PluginXJson'}, ['json', 'xjson']
@@ -55,7 +55,7 @@ class XJson:
 
         for ext in exts:
             if os.path.exists(file_name + ext):
-                self.structure = self.create_structure(self._add_file(file_name + ext))
+                self.structure = self.create_structure(self._node_from_file(file_name + ext))
                 break
 
     def _create_structure_by_dict(self, data: dict) -> XDict:
@@ -65,14 +65,13 @@ class XJson:
             result[name] = self.create_structure(value)
         return result
 
-    def _create_structure_by_list(self, data: list) -> list:
+    def _create_structure_by_list(self, data: list) -> XList:
         result = XList(owner=self)
         for value in data:
             result.append(self.create_structure(value))
         return result
 
-
-    def create_structure(self, data: Any) -> Union[list, XDict]:
+    def create_structure(self, data: XNode) -> XNode:
         if isinstance(data, dict):
             result = self._create_structure_by_dict(data)
         elif isinstance(data, list):
@@ -81,8 +80,8 @@ class XJson:
             result = data
         return result
 
-
-    def _add_file(self, file_name: str):
+    def _node_from_file(self, file_name: str) -> XNode:
+        """Create nmode from file """
         if os.path.isfile(file_name):
             node = self._apply_plugins(file_name)
         else:
@@ -96,20 +95,21 @@ class XJson:
             info = node.get(_info, {})
             files = os.listdir(file_name)
             for fn in files:
+                #if fn == _index.split(".")[:-1]:
                 if fn == _index + '.json':
                     continue
                 (name, ext) = os.path.splitext(fn)
                 if name not in node:
                     node[name] = {}
-                node[name].update(self._add_file(os.path.join(file_name, fn)))
+                node[name].update(self._node_from_file(os.path.join(file_name, fn)))
 
             info.update(BaseFilePlugin.get_file_info(file_name))
             #node[_info] = info
 
         return node
 
-    def _apply_plugins(self, file_name: str) -> dict:
-        '''Apply plugins to the file file_name '''
+    def _apply_plugins(self, file_name: str) -> XNode:
+        '''Apply plugins to the file file_name and create & return node'''
         for name in  self.plugins:
             Plugin = self.plugins[name]
             plugin = Plugin(file_name)
@@ -193,7 +193,6 @@ class XJson:
                     value = self._copy_node(value, exclude_info)
                 result.append(value)
         return result
-
 
     def copy_from(self, src):
         self._options = src.options
