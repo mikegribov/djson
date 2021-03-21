@@ -7,7 +7,7 @@
 		"bel_population": {
 			"type": "link", 
 			"ref": "belarus.population"
-		},
+		}
 	},
 		"afghanistan": {
 			"title": "Afghanistan",

@@ -4,7 +4,7 @@ _aliases = '_aliases'
 
 
 class XNode(dict):
-    __slots__ = '_aliases', '_owner'
+    __slots__ = '_aliases', '_owner', '_src'
     _aliases: dict
     _src: dict
     _owner: Any
@@ -79,7 +79,8 @@ class XList(XNode):
         return iter(self.values())
 
     def __getitem__(self, key):
-        if isinstance(key, int) or key in self._aliases:
+        print("key: ", key)
+        if isinstance(key, int) or (key in self._aliases):
             result = super().__getitem__(key)
         else:
             raise TypeError('list indices must be integers or slices, not str')

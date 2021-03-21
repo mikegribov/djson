@@ -82,7 +82,7 @@ class XJson:
         return result
 
 
-    def _add_file(self, file_name: str) -> None:
+    def _add_file(self, file_name: str):
         if os.path.isfile(file_name):
             node = self._apply_plugins(file_name)
         else:
@@ -91,6 +91,7 @@ class XJson:
                 node = self._apply_plugins(index_fn)
             except FileNotFoundException:
                 node = {}
+
 
             info = node.get(_info, {})
             files = os.listdir(file_name)
@@ -103,7 +104,7 @@ class XJson:
                 node[name].update(self._add_file(os.path.join(file_name, fn)))
 
             info.update(BaseFilePlugin.get_file_info(file_name))
-            node[_info] = info
+            #node[_info] = info
 
         return node
 
@@ -137,7 +138,7 @@ class XJson:
     def _dump_val(self, node, key='', short=True, indent='', exclude_info=True):
         return "{}{}{}\n".format(indent, key + (": " if key else ""), node)
 
-    def _dump_arr(self, node: list, key='', short=True, indent='', exclude_info=True):
+    def _dump_arr(self, node: XList, key='', short=True, indent='', exclude_info=True):
         result = ''
         n = 0
         for value in node:
@@ -148,7 +149,7 @@ class XJson:
         result = '{0}{1}{2}'.format(indent, (key + ": \n" if key else ""), result)
         return result
 
-    def _dump_obj(self, node: dict, key='', short=True, indent='', exclude_info=True):
+    def _dump_obj(self, node: XDict, key='', short=True, indent='', exclude_info=True):
         result = ''
 
         for name in node:
@@ -165,9 +166,9 @@ class XJson:
         if node is None:
             node = self.structure
 
-        if isinstance(node, list):
+        if isinstance(node, XList):
             result = self._dump_arr(node, key=key, short=short, indent=indent)
-        elif isinstance(node, dict):
+        elif isinstance(node, XDict):
             result = self._dump_obj(node, key=key, short=short, indent=indent)
         else:
             result = self._dump_val(node, key=key, short=short, indent=indent)

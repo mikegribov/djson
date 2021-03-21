@@ -1,4 +1,4 @@
-from xjson.src.plugins.json import PluginJson
+from xjson.src.plugins.plugin_json import PluginJson
 import os
 import pytest
 from xjson.src.exceptions.file_exceptions import FileNotFoundException, IsNotFileException

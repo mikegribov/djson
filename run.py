@@ -15,15 +15,17 @@ from src.plugins.plugin_json import PluginJson
 #xj = XJson(os.path.join("tests", "examples", "countries", "single_file"))
 #xj = XJson(os.path.join("tests", "examples", "empty_file"))
 #xj = XJson(os.path.join("tests", "examples", "single_file_object.json"))
-#xj = XJson(os.path.join("tests", "examples", "single_file_objarr.json"))
-xj = XJson(os.path.join("tests", "examples", "single_file_arrobj.json"))
+xj = XJson(os.path.join("tests", "examples", "single_file_objarr.json"))
+#xj = XJson(os.path.join("tests", "examples", "single_file_arrobj.json"))
 #xj = XJson(os.path.join("tests", "examples", "single_file_array.json"))
 
 #xj = XJson(os.path.join("tests", "examples", "empty_dir"))
 #xj = XJson(os.path.join("tests", "examples", "countries", "dir_one_level"))
 #xj = XJson(os.path.join("tests", "examples", "countries", "dir_several_level"))
 #xj = XJson(os.path.join("tests", "examples", "countries", "single_file.xjson"))
-print(xj.structure)
+print(type(xj.structure['arr']))
+
+print(xj.dump())
 
 #print(xj.structure.alias('russia_population'))
 #print(xj.structure['russia_population'])

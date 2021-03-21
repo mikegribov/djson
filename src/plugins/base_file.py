@@ -70,8 +70,8 @@ class BaseFilePlugin(BasePlugin):
         try:
             with open(self.full_name, 'r', encoding='utf-8') as file:
                 result = self.load(file)
-                if isinstance(result, dict):
-                    result[_info] = BaseFilePlugin.get_file_info(self.full_name)
+                #if isinstance(result, dict):
+                #    result[_info] = BaseFilePlugin.get_file_info(self.full_name)
         except Exception as ex:
             result = {'error': '{} file: {}'.format(ex, self.full_name)}
         return result
