@@ -19,9 +19,8 @@ from .plugins.base_file import BaseFilePlugin, _info
 from .plugins.plugin_json import PluginJson
 from .plugins.plugin_xjson import PluginXJson
 from .exceptions.file_exceptions import FileNotFoundException
-from .classes.dict_readonly import DictReadonly
 from .options import Options
-from .xdict import XDict
+from .xnodes import XDict, XList
 
 _index, _aliases, _required_plugins, default_exts \
     = 'index', '_aliases', {'PluginJson', 'PluginXJson'}, ['json', 'xjson']
@@ -59,19 +58,19 @@ class XJson:
                 self.structure = self.create_structure(self._add_file(file_name + ext))
                 break
 
-
-    def _create_structure_by_list(self, data: list) -> list:
-        result = []
-        for value in data:
-            result.append(self.create_structure(value))
-        return result
-
     def _create_structure_by_dict(self, data: dict) -> XDict:
         result = XDict(owner=self)
         for name in data:
             value = data[name]
             result[name] = self.create_structure(value)
         return result
+
+    def _create_structure_by_list(self, data: list) -> list:
+        result = XList(owner=self)
+        for value in data:
+            result.append(self.create_structure(value))
+        return result
+
 
     def create_structure(self, data: Any) -> Union[list, XDict]:
         if isinstance(data, dict):
