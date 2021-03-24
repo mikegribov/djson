@@ -5,6 +5,7 @@ import os
 def check_empty(name, info = {}):
     xj = XJson(os.path.join("examples", name))
     #result = xj.structure.pop('_info', {})
+    print(" ===> ", name, " | ", xj.structure)
     assert xj.structure == {}
     #result = xj.structure
     #for name in info:

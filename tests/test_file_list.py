@@ -6,6 +6,7 @@ from xjson.src.exceptions.file_exceptions import FileNotFoundException, IsNotFil
 
 def test_file_caching():
     file_list = FileList()
+    file_list.clear()
     fn = os.path.join("examples", "single_file_object.json")
     file_list.get(fn)
     file_list.get(fn)
@@ -18,6 +19,7 @@ def test_file_caching():
 
 def test_file_info():
     file_list = FileList()
+    file_list.clear()
     fn = os.path.join("examples", "single_file_object.json")
     file_list.get(fn)
     l = file_list._list
@@ -32,6 +34,7 @@ def test_file_info():
 
 def test_dir_info():
     file_list = FileList()
+    file_list.clear()
     fn = os.path.join("examples", "countries", "dir_one_level")
     file_list.get(fn)
     l = file_list._list
@@ -47,9 +50,10 @@ def test_dir_info():
 def test_singleton():
     fn = os.path.join("examples", "countries", "dir_one_level")
     file_list1 = FileList()
+    file_list1.clear()
     file_list1.get(fn)
     file_list = FileList()
-
+    file_list.clear()
     file_list.get(fn)
     l = file_list._list
     info = l.get(fn)
@@ -58,6 +62,7 @@ def test_singleton():
 
 def test_checking():
     file_list = FileList()
+    file_list.clear()
     file = file_list.get(os.path.join("examples", "not_exists"), False)
     try:
         file.check()

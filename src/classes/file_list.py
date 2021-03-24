@@ -20,6 +20,9 @@ class FileInfo:
         if load:
             self.load(file_name, load_content)
 
+    def __str__(self):
+        return "{}: '{}'".format("FILE" if self.is_file else "DIRECTORY", self.full_name)
+
     @property
     def is_file(self):
         return not self.is_directory
@@ -66,7 +69,12 @@ class FileList:
         if self.__class__._instance is None:
             self.__class__._instance = self
 
-    def get(self, file_name, reload = False):
+    def clear(self):
+        self._list.clear()
+
+    def get(self, file_name, reload = False) -> FileInfo:
+        if file_name is None:
+            return None
         if file_name in self._list or reload:
             result = self._list[file_name]
         else:

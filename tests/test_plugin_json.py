@@ -2,6 +2,7 @@ from xjson.src.plugins.plugin_json import PluginJson
 import os
 import pytest
 from xjson.src.exceptions.file_exceptions import FileNotFoundException, IsNotFileException
+from xjson.src.xnodes import create_xnode
 
 def test_extensions():
     extensions = {'ext1', 'ext2', 'ext3'}
@@ -18,9 +19,7 @@ def test_check():
 def check(name, result):
     plugin = PluginJson(os.path.join("examples", "single_file_" + name + ".json"))
     res = plugin.get()
-    if '_info' in res:
-        del res['_info']
-    assert res == result
+    assert res == create_xnode(None, result)
 
 def test_not_exists():
     hasException = False

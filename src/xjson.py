@@ -9,18 +9,19 @@ import os
 import copy
 from typing import Union, Any
 
+
 try:
     import simplejson as json
 except ImportError:
     import json
-
 
 from .plugins.base_file import BaseFilePlugin, _info
 from .plugins.plugin_json import PluginJson
 from .plugins.plugin_xjson import PluginXJson
 from .exceptions.file_exceptions import FileNotFoundException
 from .options import Options
-from .xnodes import XNode, XDict, XList
+from .xnodes import XNode, XDict, XList, create_xnode
+from .classes.file_list import FileList
 
 _index, _aliases, _required_plugins, default_exts \
     = 'index', '_aliases', {'PluginJson', 'PluginXJson'}, ['json', 'xjson']
@@ -30,6 +31,7 @@ class XJson:
         self._options = Options(options)
         self.structure = XDict(owner=self)                 # result structure
         self._load_plugins()
+        self.file_list = FileList()
         if name > '':
             self._scan(name)
 
@@ -55,9 +57,10 @@ class XJson:
 
         for ext in exts:
             if os.path.exists(file_name + ext):
-                self.structure = self.create_structure(self._node_from_file(file_name + ext))
+                self.structure = self._node_from_file(file_name + ext)
                 break
 
+    '''
     def _create_structure_by_dict(self, data: dict) -> XDict:
         result = XDict(owner=self)
         for name in data:
@@ -71,40 +74,48 @@ class XJson:
             result.append(self.create_structure(value))
         return result
 
-    def create_structure(self, data: XNode) -> XNode:
+    def create_structure(self, data: XNode = None) -> XNode:
+
         if isinstance(data, dict):
             result = self._create_structure_by_dict(data)
         elif isinstance(data, list):
             result = self._create_structure_by_list(data)
         else:
+            if data is None: data = {}
             result = data
         return result
+    '''
+    def _get_index_file(self, path):
+        """find index file with extension priority from default_exts"""
+        _fn = os.path.join(path, "index")
+        for ext in default_exts:
+            fn = _fn + "." + ext
+            if os.path.exists(fn):
+                return fn
 
     def _node_from_file(self, file_name: str) -> XNode:
         """Create nmode from file """
-        if os.path.isfile(file_name):
+        file = self.file_list.get(file_name)
+        if file.is_file:
             node = self._apply_plugins(file_name)
         else:
-            index_fn = os.path.join(file_name, _index + '.json')
-            try:
+            index_fn = self._get_index_file(file_name)
+            index_file = self.file_list.get(index_fn)
+            if index_file is None:
+                node = XDict(owner=self, _file=file)
+            else:
                 node = self._apply_plugins(index_fn)
-            except FileNotFoundException:
-                node = {}
 
 
-            info = node.get(_info, {})
             files = os.listdir(file_name)
             for fn in files:
                 #if fn == _index.split(".")[:-1]:
-                if fn == _index + '.json':
+                if index_file is not None and fn == index_file.name:
                     continue
                 (name, ext) = os.path.splitext(fn)
                 if name not in node:
-                    node[name] = {}
+                    node[name] = XDict(owner=self, _file=file)
                 node[name].update(self._node_from_file(os.path.join(file_name, fn)))
-
-            info.update(BaseFilePlugin.get_file_info(file_name))
-            #node[_info] = info
 
         return node
 
@@ -114,11 +125,12 @@ class XJson:
             Plugin = self.plugins[name]
             plugin = Plugin(file_name)
             if plugin.check():
-                return  plugin.get()
+                return plugin.get()
 
+        return XDict(self)
 
-    #def __str__(self):
-        #return self.dump()
+    def __str__(self):
+        return self.dump()
 
 
     def clear(self):

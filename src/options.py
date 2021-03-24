@@ -1,10 +1,11 @@
-from typing import List, Union
+from typing import Any
 
 class Options:
+    """Storage for XJson options"""
     _frozen: bool = False
     plugins: set
 
-    def __init__ (self, plugins: Union[set, list]):
+    def __init__ (self, plugins: Any):
         self.plugins = set(plugins)
         self._frozen = True
 

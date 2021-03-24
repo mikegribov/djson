@@ -1,25 +1,25 @@
 import os
-from typing import Union
+from typing import Any, Union
 from .base import BasePlugin
 from ..exceptions.file_exceptions import FileNotFoundException, IsNotFileException
+from ..classes.file_list import  FileList, F_FILE_NOT_FOUND
+from ..xnodes import XNode
+from ..classes.file_list import FileList
 #from httplib2 import HTTPException
 
 
 DIRECTORY, FILE, _size, _c_time, _type, _ext, _fn, _info = \
 'directory', 'file', 'size', 'c_time', 'type', 'ext', 'fn', '_info'
 
-F_ALL, F_FILE_NOT_FOUND, F_IS_NOT_FILE = 255, 1, 2
 
 class BaseFilePlugin(BasePlugin):
 
     def _init(self,  **kwargs):
-        name = self.full_name.split(os.sep)[-1]
-        self.name, self.ext = os.path.splitext(name)
-        self.ext = self.ext[1:]
-        # self.file_size = os.path.getsize(self.full_name)
         self._extensions = set(self.def_extensions())
         if 'extensions' in kwargs:
             self._extensions.update(set(kwargs['extensions']))
+
+        self.file = FileList().get(self.full_name)
 
     def def_extensions(self) -> set:
         return set()
@@ -29,11 +29,12 @@ class BaseFilePlugin(BasePlugin):
         return self._extensions
 
     def check(self) -> bool:
-        return self.ext in self.extensions
+        return self.file.ext in self.extensions
 
-    def load(self, content) -> Union[bool, str, int, float, list, dict]:
+    def load(self, content) -> XNode:
         pass
 
+    '''
     @staticmethod
     def check_file(file_name, flags = F_ALL):
         if (F_FILE_NOT_FOUND & flags) and not os.path.exists(file_name):
@@ -64,14 +65,7 @@ class BaseFilePlugin(BasePlugin):
                 'name': file_name.split(os.sep)[-1]
             })
         return result
-
-    def get(self) -> Union[bool, str, int, float, list, dict]:
-        BaseFilePlugin.check_file(self.full_name)
-        try:
-            with open(self.full_name, 'r', encoding='utf-8') as file:
-                result = self.load(file)
-                #if isinstance(result, dict):
-                #    result[_info] = BaseFilePlugin.get_file_info(self.full_name)
-        except Exception as ex:
-            result = {'error': '{} file: {}'.format(ex, self.full_name)}
-        return result
+    '''
+    def get(self) -> XNode:
+        self.file.check(F_FILE_NOT_FOUND)
+        return self.load(self.file.content)

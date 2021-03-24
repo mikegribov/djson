@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Any
 
 class BasePlugin:
 
@@ -13,6 +13,6 @@ class BasePlugin:
     def check(self) -> bool:
         return False
 
-    def get(self) -> Union[bool, str, int, float, list, dict]:
+    def get(self) -> Any:
         pass
 
