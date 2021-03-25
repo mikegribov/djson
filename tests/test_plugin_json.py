@@ -45,4 +45,3 @@ def test_arrayobj():
 
 def test_objarr():
     check("objarr", {'name1': 'value1', 'name2': 'value2', 'name3': 'value3', 'arr': ['element1', 'element2', 'element3']})
-

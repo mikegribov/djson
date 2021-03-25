@@ -1,0 +1,3 @@
+Test text.
+Multi line random text
+This text is value for key with name same this file name

@@ -16,15 +16,18 @@ except ImportError:
     import json
 
 from .plugins.base_file import BaseFilePlugin, _info
-from .plugins.plugin_json import PluginJson
-from .plugins.plugin_xjson import PluginXJson
 from .exceptions.file_exceptions import FileNotFoundException
 from .options import Options
 from .xnodes import XNode, XDict, XList, create_xnode
 from .classes.file_list import FileList
+# plugins
+from .plugins.plugin_json import PluginJson
+from .plugins.plugin_xjson import PluginXJson
+from .plugins.plugin_text import PluginText
+# /plugins
 
 _index, _aliases, _required_plugins, default_exts \
-    = 'index', '_aliases', {'PluginJson', 'PluginXJson'}, ['json', 'xjson']
+    = 'index', '_aliases', {'PluginJson', 'PluginXJson', 'PluginText'}, ['json', 'xjson']
 
 class XJson:
     def __init__(self, name: str = '', **options) -> None:
@@ -115,7 +118,13 @@ class XJson:
                 (name, ext) = os.path.splitext(fn)
                 if name not in node:
                     node[name] = XDict(owner=self, _file=file)
-                node[name].update(self._node_from_file(os.path.join(file_name, fn)))
+                value = self._node_from_file(os.path.join(file_name, fn))
+                if isinstance(value, XDict):
+                    node[name].update(value)
+                elif isinstance(value, XList):
+                    node[name].append(value)
+                else:
+                    node[name] = value
 
         return node
 

@@ -14,12 +14,12 @@ class PluginJson(BaseFilePlugin):
         return {'json'}
 
     def load(self, content) -> XNode:
-        file = FileList().get(self.full_name)
+        #elf.full_name)
         try:
             if content.strip() == '':
-                result = XDict(_file=file)
+                result = XDict(_file=self.file)
             else:
-                result = create_xnode(None, json.loads(content), _file=file)
+                result = create_xnode(None, json.loads(content), _file=self.file)
         except json.JSONDecodeError as ex:
-            result = XFileError(name=ex, _file=file)
+            result = XFileError(name=ex, _file=self.file)
         return result

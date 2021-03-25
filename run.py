@@ -21,16 +21,18 @@ from src.classes.file_list import FileList
 #xj = XJson(os.path.join("tests", "examples", "single_file_object.json"))
 #xj = XJson(os.path.join("tests", "examples", "single_file_objarr.json"))
 #xj = XJson(os.path.join("tests", "examples", "single_file_arrobj.json"))
-xj = XJson(os.path.join("tests", "examples", "single_file_array.json"))
-
+#xj = XJson(os.path.join("tests", "examples", "single_file_array.json"))
+xj = XJson(os.path.join("tests", "examples", "several_file_types"))
 #xj = XJson(os.path.join("tests", "examples", "empty_dir"))
 #xj = XJson(os.path.join("tests", "examples", "countries", "dir_one_level"))
 #xj = XJson(os.path.join("tests", "examples", "countries", "dir_several_level"))
 #xj = XJson(os.path.join("tests", "examples", "countries", "single_file.xjson"))
 print(xj)
 
-x = XList(1,2,3,5)
-print(x)
+
+value_from_xjson = xj.structure['text']
+print(value_from_xjson)
+
 #print(xj.dump())
 
 #print(xj.structure.alias('russia_population'))
