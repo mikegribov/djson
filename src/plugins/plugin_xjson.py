@@ -1,6 +1,3 @@
-
-import os
-from typing import Any
 from pyparsing import ParseException
 from .base_file import BaseFilePlugin
 from .parser_xjson import ParserXJson
@@ -14,14 +11,14 @@ class PluginXJson(BaseFilePlugin):
 
     def load(self, content) -> XNode:
         file = FileList().get(self.full_name)
-        try:
-            if content.strip() == '':
-                result = XDict(_file=file)
-            else:
+
+        if content.strip() == '':
+            result = XDict(_file=file)
+        else:
+            try:
                 self.parser = ParserXJson()
                 self.parser.parse(content)
                 result = create_xnode(None, self.parser.to_dict(), _file=file)
-
-        except ParseException as ex:
-            result = XFileError(name=ex, _file=file)
+            except ParseException as ex:
+                result = XFileError(name=ex, _file=file)
         return result
