@@ -24,11 +24,12 @@ from .classes.file_list import FileList
 from .plugins.plugin_json import PluginJson
 from .plugins.plugin_xjson import PluginXJson
 from .plugins.plugin_text import PluginText
+from .plugins.plugin_csv import PluginCsv
 from .plugins.plugin_yaml import PluginYaml
 # /plugins
 
 _index, _aliases, _required_plugins, default_exts \
-    = 'index', '_aliases', {'PluginJson', 'PluginXJson', 'PluginText', 'PluginYaml'}, ['json', 'xjson']
+    = 'index', '_aliases', {'PluginJson', 'PluginXJson', 'PluginText', 'PluginCsv', 'PluginYaml'}, ['json', 'xjson']
 
 class XJson:
     def __init__(self, name: str = '', **options) -> None:

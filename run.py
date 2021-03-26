@@ -3,21 +3,12 @@
 from src.xjson import XJson
 from src.xnodes import XList
 import os
+import io
 import sys
 
 from src.plugins.plugin_json import PluginJson
 
 from src.classes.file_list import FileList
-'''
-import yaml
-with open(os.path.join("tests", "examples", "countries", "single_file.yaml")) as file:
-    document = file.read()
-    try:
-        print(yaml.safe_load(document))
-    except yaml.parser.ParserError as ex:
-        print(ex)
-'''
-
 
 #plugin = PluginJson("D:\\WORK\\GITHUB\\xjson\\tests\examples\\single_file_objarr.json")
 #print(plugin.get())
@@ -35,9 +26,9 @@ with open(os.path.join("tests", "examples", "countries", "single_file.yaml")) as
 #xj = XJson(os.path.join("tests", "examples", "countries", "dir_one_level"))
 #xj = XJson(os.path.join("tests", "examples", "countries", "dir_several_level"))
 #xj = XJson(os.path.join("tests", "examples", "countries", "single_file.xjson"))
-xj = XJson(os.path.join("tests", "examples", "countries", "single_file.yaml"))
+#xj = XJson(os.path.join("tests", "examples", "countries", "single_file.yaml"))
+xj = XJson(os.path.join("tests", "examples", "countries", "single_file.csv"))
 print(xj)
-#print(xj.dump())
 
 #print(xj.structure.alias('russia_population'))
 #print(xj.structure['russia_population'])
