@@ -1,0 +1,17 @@
+{
+	"obj": {
+		"name1_1": "value1",
+		"name1_2": "value2",
+		"name1_3": "value3"
+	},
+	"obj2": {
+		"name2_1": "value1",
+		"name2_2": "value2",
+		"name2_3": "value3"
+	},
+	"obj3":{
+		"name3_1": "value1",
+		"name3_2": "value2",
+		"name3_3": "value3"
+	}
+}

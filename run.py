@@ -7,8 +7,10 @@ import io
 import sys
 
 from src.plugins.plugin_json import PluginJson
-
 from src.classes.file_list import FileList
+
+
+
 
 #plugin = PluginJson("D:\\WORK\\GITHUB\\xjson\\tests\examples\\single_file_objarr.json")
 #print(plugin.get())
@@ -27,7 +29,8 @@ from src.classes.file_list import FileList
 #xj = XJson(os.path.join("tests", "examples", "countries", "dir_several_level"))
 #xj = XJson(os.path.join("tests", "examples", "countries", "single_file.xjson"))
 #xj = XJson(os.path.join("tests", "examples", "countries", "single_file.yaml"))
-xj = XJson(os.path.join("tests", "examples", "countries", "single_file.csv"))
+#xj = XJson(os.path.join("tests", "examples", "countries", "single_file.csv"))
+xj = XJson(os.path.join("tests", "examples", "countries", "single_file.xml"))
 print(xj)
 
 #print(xj.structure.alias('russia_population'))

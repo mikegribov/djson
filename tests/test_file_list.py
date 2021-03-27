@@ -7,7 +7,7 @@ from xjson.src.exceptions.file_exceptions import FileNotFoundException, IsNotFil
 def test_file_caching():
     file_list = FileList()
     file_list.clear()
-    fn = os.path.join("examples", "single_file_object.json")
+    fn = os.path.join("examples", "single_file_obj.json")
     file_list.get(fn)
     file_list.get(fn)
     file_list.get(fn, True)
@@ -20,14 +20,14 @@ def test_file_caching():
 def test_file_info():
     file_list = FileList()
     file_list.clear()
-    fn = os.path.join("examples", "single_file_object.json")
+    fn = os.path.join("examples", "single_file_obj.json")
     file_list.get(fn)
     l = file_list._list
     info = l.get(fn)
     assert info.full_name == fn
     assert info.c_time == os.path.getctime(fn)
     assert info.size == os.path.getsize(fn)
-    assert info.name == "single_file_object.json"
+    assert info.name == "single_file_obj.json"
     assert info.ext == "json"
     assert info.is_file == True
     assert info.is_directory == False
