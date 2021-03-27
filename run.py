@@ -5,12 +5,13 @@ from src.xnodes import XList
 import os
 import io
 import sys
+import traceback
 
 from src.plugins.plugin_json import PluginJson
 from src.classes.file_list import FileList
-
-
-
+name, ext="arr", "xml"
+plugin = XJson(os.path.join("tests", "examples", "single_file_" + name + "." + ext))
+print(plugin.structure)
 
 #plugin = PluginJson("D:\\WORK\\GITHUB\\xjson\\tests\examples\\single_file_objarr.json")
 #print(plugin.get())
@@ -30,8 +31,8 @@ from src.classes.file_list import FileList
 #xj = XJson(os.path.join("tests", "examples", "countries", "single_file.xjson"))
 #xj = XJson(os.path.join("tests", "examples", "countries", "single_file.yaml"))
 #xj = XJson(os.path.join("tests", "examples", "countries", "single_file.csv"))
-xj = XJson(os.path.join("tests", "examples", "countries", "single_file.xml"))
-print(xj)
+#xj = XJson(os.path.join("tests", "examples", "countries", "single_file.xml"))
+#print(xj)
 
 #print(xj.structure.alias('russia_population'))
 #print(xj.structure['russia_population'])

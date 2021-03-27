@@ -10,8 +10,48 @@ class PluginXml(BaseFilePlugin):
     def def_extensions(self) -> set:
         return {'xml'}
 
-
     def _node_to_dict(self, node: minidom.Node) -> dict:
+        """
+        <node atr1="val1" atr2="val2></node>
+        convert to
+        "node": {
+            "atr1":"val1",
+            "atr2":"val2",
+            "atr3":"val3"
+        }
+        AND
+        <node>
+            <atr1>val1</atr1>
+            <atr2>val1</atr2>
+        </node>
+        ***  will be convert to
+        "node": {
+            "atr1":"val1",
+            "atr2":"val2",
+            "atr3":"val3"
+        }
+        //////////////////////////////////////////////////
+        <node>
+            <row>element1</row>
+            <row>element2</row>
+            <row>element3</row>
+        </node>
+        ***  will be convert to
+        "node":["element1","element2", "element3"]
+        //////////////////////////////////////////////////
+        <node>
+            <subnode>subnode value</subnode>
+            <row>element1</row>
+            <row>element2</row>
+            <row>element3</row>
+        </node>
+        ***  will be convert to
+        "node":{
+            "subnode": "subnode value",
+            "row": ["element1","element2", "element3"]
+        }
+
+        """
         result = {}
         if isinstance(node, minidom.Document):
             if node.hasChildNodes():
@@ -26,6 +66,7 @@ class PluginXml(BaseFilePlugin):
         else:
             no_attributes = False
             result = dict(attributes.items())
+        values = {}
         for _node in node.childNodes:
             if isinstance(_node, minidom.Element):
                 name = _node.tagName
@@ -35,12 +76,28 @@ class PluginXml(BaseFilePlugin):
                     if text == '':
                         text = None
                 if text is None:
-                    result[name] = self._node_to_dict(_node)
+                    value = self._node_to_dict(_node)
                 else:
                     if no_attributes:
                         result['#text'] = text
+                        continue
                     else:
-                        result[name] = text
+                        value = text
+                if name in values:
+                    values[name].append(value)
+                else:
+                    values[name] = [value]
+
+        if len(values) == 1:
+            result = values[list(values.keys())[0]]
+        else:
+            for name in values:
+                value = values[name]
+                if len(value) == 1:
+                    value = value[0]
+                result[name] = value
+        #result[name] = self._node_to_dict(_node)
+
         return result
 
     def xml_to_dict(self, content: str) -> dict:

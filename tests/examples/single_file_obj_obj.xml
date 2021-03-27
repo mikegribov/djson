@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+  <obj>
+    <name1_1>value1</name1_1>
+    <name1_2>value2</name1_2>
+    <name1_3>value3</name1_3>
+  </obj>
+  <obj2>
+    <name2_1>value1</name2_1>
+    <name2_2>value2</name2_2>
+    <name2_3>value3</name2_3>
+  </obj2>
+  <obj3>
+    <name3_1>value1</name3_1>
+    <name3_2>value2</name3_2>
+    <name3_3>value3</name3_3>
+  </obj3>
+</root>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+  <row>
+    <name>object1</name>
+    <title>Object one</title>
+  </row>
+  <row>
+    <name>object1</name>
+    <title>Object two</title>
+  </row>
+  <row>
+    <name>object3</name>
+    <title>Object three</title>
+  </row>
+</root>
