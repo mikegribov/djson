@@ -1,5 +1,5 @@
-from xjson.src.xjson import XJson
 import os
+from ..xjson import XJson
 
 
 def check_empty(name, info = {}):

@@ -1,6 +1,7 @@
-from xjson.src.xjson import XJson
 import os
 import traceback
+from ..xjson import XJson
+
 
 def check_same_structure(name, ext):
     json = XJson(os.path.join("examples", "single_file_" + name + ".json"))

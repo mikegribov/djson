@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from src.xjson import XJson
-from src.xnodes import XList
+from xjson import XJson
+from xjson.xnodes import XList
 import os
 import io
 import sys
 import traceback
 
-from src.plugins.plugin_json import PluginJson
-from src.classes.file_list import FileList
+from xjson.plugins.plugin_json import PluginJson
+from xjson.classes.file_list import FileList
 name, ext="arr", "xml"
 plugin = XJson(os.path.join("tests", "examples", "single_file_" + name + "." + ext))
 print(plugin.structure)

@@ -1,4 +1,4 @@
-from xjson.src.xjson import XJson
+from ..xjson import XJson
 import os
 
 

@@ -4,3 +4,4 @@
 .pytest_cache
 __pycache__
 /DJson.egg-info
+/xjson.egg-info

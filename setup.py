@@ -1,20 +1,20 @@
 from setuptools import setup, find_packages
 
-with open("README.md", "r") as file:
+with open("README.short.txt", "r") as file:
     long_description = file.read()
 
 setup(
-    name='djson',
-    version='0.12',
+    name='xjson',
+    version='0.21',
     description='Distributed JSON',
     author='Michael Gribov',
     author_email='mihail.g.gribov@gmail.com',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/mikegribov/djson",
+    url="https://github.com/mikegribov/xjson",
     packages=find_packages(),
     classifiers=[
-        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.7",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],

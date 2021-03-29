@@ -1,5 +1,5 @@
-from xjson.src.plugins.base_file import BaseFilePlugin
-from xjson.src.exceptions.file_exceptions import FileNotFoundException
+from ..xjson.exceptions.file_exceptions import FileNotFoundException
+from ..xjson.plugins.base_file import BaseFilePlugin
 import os
 
 def test_extensions():

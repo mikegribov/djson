@@ -1,5 +1,6 @@
-from xjson.src.xjson import XJson
 import os
+from ..xjson import XJson
+
 
 def test_json_eq_xml():
     json = XJson(os.path.join("examples", "countries", "single_file.xml"))
