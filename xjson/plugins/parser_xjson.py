@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from pyparsing import Char, Literal, StringEnd, Combine, ZeroOrMore, Forward, Group, QuotedString, Suppress, Word, Optional, delimitedList, alphanums, alphas, nums
+from pyparsing import Combine, ZeroOrMore, Forward, Group, QuotedString, Suppress, Word, Optional, delimitedList, alphanums, alphas, nums
 
 
 class ParserXJson:

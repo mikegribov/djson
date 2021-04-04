@@ -1,5 +1,5 @@
 from typing import Union, Any
-from .classes.file_list import FileList, FileInfo
+from .file_list import FileList, FileInfo
 
 _aliases = '_aliases'
 

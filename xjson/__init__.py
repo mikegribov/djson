@@ -19,7 +19,7 @@ from .plugins.base_file import BaseFilePlugin, _info
 from .exceptions.file_exceptions import FileNotFoundException
 from .options import Options
 from .xnodes import XNode, XDict, XList, create_xnode
-from .classes.file_list import FileList
+from .file_list import FileList
 # plugins
 from .plugins.plugin_json import PluginJson
 from .plugins.plugin_xjson import PluginXJson
@@ -65,31 +65,6 @@ class XJson:
                 self.structure = self._node_from_file(file_name + ext)
                 break
 
-    '''
-    def _create_structure_by_dict(self, data: dict) -> XDict:
-        result = XDict(owner=self)
-        for name in data:
-            value = data[name]
-            result[name] = self.create_structure(value)
-        return result
-
-    def _create_structure_by_list(self, data: list) -> XList:
-        result = XList(owner=self)
-        for value in data:
-            result.append(self.create_structure(value))
-        return result
-
-    def create_structure(self, data: XNode = None) -> XNode:
-
-        if isinstance(data, dict):
-            result = self._create_structure_by_dict(data)
-        elif isinstance(data, list):
-            result = self._create_structure_by_list(data)
-        else:
-            if data is None: data = {}
-            result = data
-        return result
-    '''
     def _get_index_file(self, path):
         """find index file with extension priority from default_exts"""
         _fn = os.path.join(path, "index")
@@ -141,7 +116,7 @@ class XJson:
         return XDict(self)
 
     def __str__(self):
-        return self.dump()
+        return self.dump(self.structure)
 
 
     def clear(self):
@@ -153,6 +128,17 @@ class XJson:
 
     def alias(self, name: str):
         self.structure.alias(name)
+
+    def get_root_value(self, name) -> str:
+        """ return root value, only str or int (return str from int)"""
+        result = ''
+        if name in self.structure:
+            val = self.structure[name]
+            if isinstance(val, str):
+                result = val
+            elif isinstance(val, int):
+                result = str(val)
+        return result
 
     @property
     def options(self) -> Options:
@@ -174,21 +160,18 @@ class XJson:
 
     def _dump_obj(self, node: XDict, key='', short=True, indent='', exclude_info=True):
         result = ''
-
         for name in node:
             if exclude_info and name == _info:
                 continue
             value = node[name]
-            value = self.dump(value, key=name, short=short, indent=indent + ". ", exclude_info=exclude_info)
-            result += value
+            result += self.dump(value, key=name, short=short, indent=indent + ". ", exclude_info=exclude_info)
         result = '{}{}{}'.format(indent, (key + ": \n" if key else ""), result)
         return result
 
-    def dump(self, node=None, key='', short=True, indent='', exclude_info = True):
+    def dump(self, node, key='', short=True, indent='', exclude_info = True):
         result = ''
-        if node is None:
-            node = self.structure
-
+        #if node is None:
+        #    node = self.structure #TODO: зацикливается, если None внутри, надо обработать этот вариант по-другому
         if isinstance(node, XList):
             result = self._dump_arr(node, key=key, short=short, indent=indent)
         elif isinstance(node, XDict):

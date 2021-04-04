@@ -1,5 +1,5 @@
 import os
-from ..xjson.classes.file_list import FileList, F_FILE_NOT_FOUND
+from ..xjson.file_list import FileList, F_FILE_NOT_FOUND
 from ..xjson.exceptions.file_exceptions import FileNotFoundException, IsNotFileException
 
 

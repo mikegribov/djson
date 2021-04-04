@@ -2,7 +2,7 @@ from pyparsing import ParseException
 from .base_file import BaseFilePlugin
 from .parser_xjson import ParserXJson
 from ..xnodes import create_xnode, XNode, XDict, XFileError
-from ..classes.file_list import FileList
+from ..file_list import FileList
 
 class PluginXJson(BaseFilePlugin):
 

@@ -2,9 +2,9 @@ import os
 from typing import Any, Union
 from .base import BasePlugin
 from ..exceptions.file_exceptions import FileNotFoundException, IsNotFileException
-from ..classes.file_list import  FileList, F_FILE_NOT_FOUND
+from ..file_list import  FileList, F_FILE_NOT_FOUND
 from ..xnodes import XNode
-from ..classes.file_list import FileList
+from ..file_list import FileList
 #from httplib2 import HTTPException
 
 

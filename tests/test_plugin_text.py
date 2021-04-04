@@ -1,6 +1,6 @@
 import os
 from ..xjson import XJson
-from ..xjson.classes.file_list import FileList
+from ..xjson.file_list import FileList
 
 def test_text_value():
 

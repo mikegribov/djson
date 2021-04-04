@@ -4,7 +4,7 @@ import os
 
 def check(name, value):
     xj = XJson(os.path.join("examples", name))
-    assert xj.dump() == value
+    assert xj.dump(xj.structure) == value
 
 def test_empty_file():
     check("empty_file", '')

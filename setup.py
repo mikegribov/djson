@@ -5,7 +5,7 @@ with open("README.short.txt", "r") as file:
 
 setup(
     name='xjson',
-    version='0.21',
+    version='0.25',
     description='Distributed JSON',
     author='Michael Gribov',
     author_email='mihail.g.gribov@gmail.com',

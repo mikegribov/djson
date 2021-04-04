@@ -1,7 +1,7 @@
 import datetime
-from typing import Union, Any
+from typing import Any
 import os
-from ..exceptions.file_exceptions import FileNotFoundException, IsNotFileException
+from .exceptions.file_exceptions import FileNotFoundException, IsNotFileException
 
 F_ALL, F_FILE_NOT_FOUND, F_IS_NOT_FILE = 255, 1, 2
 
